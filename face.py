@@ -2,6 +2,7 @@ import cv2
 
 #Initialize classifier object
 faceCascade = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
+smileCascade = cv2.CascadeClassifier("smile.xml")
 
 #load image
 #img = cv2.imread("photo.jpg")
@@ -11,7 +12,7 @@ refFrame = None
 
 count = 0
 
-while count < 40:
+while count < 10:
     check, frame = video.read()
     #convert to grayscale
     #gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -28,14 +29,33 @@ grayImg = cv2.cvtColor(refFrame, cv2.COLOR_BGR2GRAY)
 #faces is an array representing rectangle that captures faces [xth pixel, yth pixel, length, width]
 #faces will be an array of arrays if multiple faces are detected
 faces = faceCascade.detectMultiScale(grayImg, scaleFactor = 1.13, minNeighbors = 3)
-
+#create an array to detect and store smiles
+smiles = smileCascade.detectMultiScale(grayImg, scaleFactor = 1.60, minNeighbors = 20)
 #loop to draw a rectangle around detected faces
 for x, y, w, h in faces:
                       #image  #top left corner   #bottom right corner   #color    #line width
     refFrame = cv2.rectangle(refFrame,       (x,y),       (x + w, y + h),        (0, 255, 0),     3)
 
-print(type(faces))
-print(faces)  
+#Create a smile detection system
+if smiles != ():
+    happy = True
+else:
+    happy = False
+print(smiles)
+
+#putText(image, text, org, font, font scale)
+if faces != ():
+    numFaces = int(faces.size / 4)
+    if numFaces == 1:
+        if happy == True:
+            cv2.putText(refFrame, f"{numFaces} Face Detected: Happy" , (550,50), cv2.FONT_HERSHEY_COMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
+        else:
+            cv2.putText(refFrame, f"{numFaces} Face Detected: Unhappy" , (550,50), cv2.FONT_HERSHEY_COMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
+
+    elif numFaces > 1:
+        cv2.putText(refFrame, f"{numFaces} Faces Detected", (550,50), cv2.FONT_HERSHEY_COMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
+else:
+    cv2.putText(refFrame, "No Faces Detected", (550,50), cv2.FONT_HERSHEY_COMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
 
 #eyeCascade = cv2.CascadeClassifier("eyes.xml")
 #eyes = eyeCascade.detectMultiScale(grayImg, scaleFactor = 1.05, minNeighbors = 5)
