@@ -1,2 +1,2 @@
 # Facial-Detector
-Python application utilizing haar cascades and the cv2 library to detect faces and smiles. Smile functionality is currently only working for videos containing one subject. 
+Python application utilizing haar cascades from the Intel Open Source Computer Vision Library and the cv2 python library to detect faces and smiles. Smile functionality is currently only working for videos containing one subject. 
