@@ -12,6 +12,7 @@ refFrame = None
 
 count = 0
 
+#testing
 while True:
     check, frame = video.read()
     if count < 40:
